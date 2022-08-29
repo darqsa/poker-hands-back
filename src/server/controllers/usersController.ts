@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../../database/models/User";
+import createHash from "../../utils/auth";
 import createCustomError from "../../utils/createCustomError";
+import { UserData } from "../types/errorInterfaces";
 
 const registerUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const user = req.body;
+  const user: UserData = req.body;
 
   user.password = await createHash(user.password);
   try {
