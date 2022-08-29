@@ -13,7 +13,10 @@ const registerUser = async (
 
   user.password = await createHash(user.password);
   try {
-    const newUser = await User.create(user);
+    const newUser = await User.create({
+      username: user.username.toString(),
+      password: user.password.toString(),
+    });
     res.status(201).json(newUser);
   } catch (error) {
     const customError = createCustomError(
