@@ -73,6 +73,25 @@ describe("Given a generalError function", () => {
 
         expect(res.json).toHaveBeenCalledWith(testError);
       });
+
+      describe("And don't receives no public message and code", () => {
+        test("Then it should call the response json method with 'General error'", () => {
+          const message = "General error";
+
+          const error = new Error() as CustomError;
+
+          const testError = { error: message };
+
+          generalError(
+            error,
+            req as Request,
+            res as Response,
+            next as NextFunction
+          );
+
+          expect(res.json).toHaveBeenCalledWith(testError);
+        });
+      });
     });
   });
 });
