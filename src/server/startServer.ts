@@ -2,7 +2,7 @@ import chalk from "chalk";
 import Debug from "debug";
 import app from ".";
 
-const debug = Debug("users:server:startServer");
+const debug = Debug("poker-hands:server:startServer");
 
 const startServer = (port: number) =>
   new Promise((resolve, reject) => {
