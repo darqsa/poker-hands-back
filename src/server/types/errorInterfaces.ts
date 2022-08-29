@@ -3,3 +3,8 @@ export interface CustomError extends Error {
   publicMessage: string;
   privateMessage: string;
 }
+
+export interface UserData {
+  username: string;
+  password: string;
+}
