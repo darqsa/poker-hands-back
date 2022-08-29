@@ -36,7 +36,7 @@ describe("Given a generalError function", () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       } as Partial<Response>;
-      const next = () => {};
+      const next = jest.fn();
 
       test("Then it should call the response method with 222", () => {
         const status = 222;
@@ -46,7 +46,7 @@ describe("Given a generalError function", () => {
         error.publicMessage = "";
 
         generalError(
-          error as CustomError,
+          error,
           req as Request,
           res as Response,
           next as NextFunction
@@ -65,7 +65,7 @@ describe("Given a generalError function", () => {
         const testError = { error: message };
 
         generalError(
-          error as CustomError,
+          error,
           req as Request,
           res as Response,
           next as NextFunction
