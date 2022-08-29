@@ -10,13 +10,17 @@
     "start:dev": "nodemon -q",
     "test": "jest src --passWithNoTests",
     "test:dev": "jest src --watchAll",
-    "test-coverage": "jest src --coverage --watchAll=false"
+    "test-coverage": "jest src --coverage --watchAll=false --passWithNoTests"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/debug": "^4.1.7",
+    "@types/express": "^4.17.13",
     "@types/jest": "^28.1.6",
+    "@types/morgan": "^1.9.3",
     "@types/node": "^18.7.1",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
@@ -31,6 +35,12 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "husky": "^8.0.1"
+    "dotenv": "^16.0.1",
+    "chalk": "^4.1.2",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "express": "^4.18.1",
+    "husky": "^8.0.1",
+    "morgan": "^1.10.0"
   }
 }
