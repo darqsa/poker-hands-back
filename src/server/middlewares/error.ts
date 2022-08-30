@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import Debug from "debug";
 import { NextFunction, Request, Response } from "express";
+import { ValidationError } from "express-validation";
 import { CustomError } from "../types/errorInterfaces";
 
 const debug = Debug("poker-hands:server:middlewares:errors");
@@ -17,8 +18,17 @@ export const generalError = (
   next: NextFunction
 ) => {
   const errorStatus = error.statusCode ?? 500;
-  const publicErrorMessage = error.publicMessage ?? "General error";
-  const privateErrorMessage = error.privateMessage;
+  let publicErrorMessage = error.publicMessage ?? "General error";
+  let privateErrorMessage = error.privateMessage;
+
+  if (error instanceof ValidationError) {
+    publicErrorMessage = "Wrong data";
+    privateErrorMessage = "Request validation error: ";
+
+    error.details.body.forEach((errorInfo) => {
+      privateErrorMessage += `${errorInfo.message}, `;
+    });
+  }
 
   debug(chalk.red(privateErrorMessage));
 
