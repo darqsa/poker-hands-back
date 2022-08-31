@@ -1,4 +1,4 @@
-import { CustomError } from "../server/types/errorInterfaces";
+import { CustomError } from "../server/types/interfaces";
 
 const createCustomError = (
   code: number,

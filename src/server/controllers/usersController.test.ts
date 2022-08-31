@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import createCustomError from "../../utils/createCustomError";
 import User from "../../database/models/User";
-import registerUser from "./usersController";
+import { registerUser } from "./usersController";
 
 describe("Given a registerUser function", () => {
   const fakeUser = {

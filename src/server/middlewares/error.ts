@@ -2,7 +2,7 @@ import chalk from "chalk";
 import Debug from "debug";
 import { NextFunction, Request, Response } from "express";
 import { ValidationError } from "express-validation";
-import { CustomError } from "../types/errorInterfaces";
+import { CustomError } from "../types/interfaces";
 
 const debug = Debug("poker-hands:server:middlewares:errors");
 

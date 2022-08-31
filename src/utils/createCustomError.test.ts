@@ -1,4 +1,4 @@
-import { CustomError } from "../server/types/errorInterfaces";
+import { CustomError } from "../server/types/interfaces";
 import createCustomError from "./createCustomError";
 
 describe("Given a createCustomError function", () => {
