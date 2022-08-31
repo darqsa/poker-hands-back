@@ -10,8 +10,6 @@ beforeAll(async () => {
   server = await MongoMemoryServer.create();
   const mongoURL = server.getUri();
 
-  //  crear un user para el login
-  //  User.create({fodskdf})
   await connectDatabase(mongoURL);
 });
 afterAll(async () => {
