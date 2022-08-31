@@ -1,8 +1,14 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { UserPayload } from "../server/types/interfaces";
 
-const createHash = (text: string) => {
+export const createHash = (text: string) => {
   const salt = 10;
   return bcrypt.hash(text, salt);
 };
 
-export default createHash;
+export const compareHash = (text: string, hash: string) =>
+  bcrypt.compare(text, hash);
+
+export const createToken = (payload: UserPayload) =>
+  jwt.sign(payload, process.env.SECRET);
