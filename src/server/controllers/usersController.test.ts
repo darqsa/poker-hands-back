@@ -135,5 +135,20 @@ describe("Given a loginUser function", () => {
 
       expect(next).toHaveBeenCalledWith(error);
     });
+
+    test("Then it should call the next function with the created error if the passwords don't match", async () => {
+      User.find = jest.fn().mockReturnValue([fakeUser]);
+      mockHashCompareValue = false;
+
+      const error = createCustomError(
+        403,
+        "Incorrect user or password",
+        Error.name
+      );
+      error.message = "Password Invalid";
+      await loginUser(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
   });
 });
