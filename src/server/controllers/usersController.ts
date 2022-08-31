@@ -48,7 +48,7 @@ export const loginUser = async (
   );
 
   try {
-    findUser = await User.find({ username: user.username });
+    findUser = await User.find({ username: user.username.toString() });
     if (findUser.length === 0) {
       next(userError);
       return;
