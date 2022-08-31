@@ -64,12 +64,11 @@ export const loginUser = async (
       findUser[0].password
     );
     if (!isPassWordvalid) {
-      userError.message = "Password Invalid";
-      next(userError);
-      return;
+      throw new Error();
     }
   } catch (error) {
-    next(catchedError);
+    userError.message = "Password Invalid";
+    next(userError);
     return;
   }
 
