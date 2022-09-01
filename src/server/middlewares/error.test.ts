@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { errors, ValidationError } from "express-validation";
 import { CustomError } from "../types/interfaces";
 import { generalError, notFoundError } from "./error";
 
@@ -91,6 +92,49 @@ describe("Given a generalError function", () => {
 
           expect(res.json).toHaveBeenCalledWith(testError);
         });
+      });
+    });
+
+    describe("When it receives a valition error", () => {
+      const error = new ValidationError(
+        { body: [{ message: "error" }] } as errors,
+        {}
+      );
+
+      const req = {} as Partial<Request>;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+      const next = jest.fn();
+
+      test("Then it should call the response status method with 400 status", () => {
+        const expectedStatus = 400;
+        error.statusCode = expectedStatus;
+
+        generalError(
+          error as unknown as CustomError,
+          req as Request,
+          res as Response,
+          next as NextFunction
+        );
+
+        expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      });
+
+      test("Then it should call the response json method with the 'Invalid data' message", () => {
+        const expectedErrorMessage = {
+          error: "Wrong data",
+        };
+
+        generalError(
+          error as unknown as CustomError,
+          req as Request,
+          res as Response,
+          next as NextFunction
+        );
+
+        expect(res.json).toHaveBeenCalledWith(expectedErrorMessage);
       });
     });
   });
