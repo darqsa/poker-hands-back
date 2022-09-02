@@ -5,7 +5,7 @@ import { CustomRequest, UserPayload } from "../types/interfaces";
 
 const authentication = (
   req: CustomRequest,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) => {
   const dataAuthentication = req.get("Authorization");
@@ -19,10 +19,6 @@ const authentication = (
   const token = dataAuthentication.slice(7);
 
   const tokenData = verifyToken(token);
-  if (typeof tokenData === "string") {
-    next(error);
-    return;
-  }
 
   req.payload = tokenData as UserPayload;
   next();
