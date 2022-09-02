@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface CustomError extends Error {
   statusCode: number;
   publicMessage: string;
@@ -16,4 +18,8 @@ export interface UserLoginData extends UserData {
 export interface UserPayload {
   username: string;
   id: string;
+}
+
+export interface CustomRequest extends Request {
+  payload: UserPayload;
 }
