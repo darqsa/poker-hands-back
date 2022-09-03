@@ -101,7 +101,7 @@ describe("Given a loginUser function", () => {
       const error = createCustomError(
         403,
         "Incorrect user or password",
-        Error.name
+        "Error logging user in"
       );
 
       await loginUser(req as Request, res as Response, next as NextFunction);
@@ -113,7 +113,7 @@ describe("Given a loginUser function", () => {
       const error = createCustomError(
         403,
         "Incorrect user or password",
-        Error.name
+        "Error logging user in"
       );
       User.find = jest.fn().mockRejectedValue(new Error());
 
@@ -126,7 +126,7 @@ describe("Given a loginUser function", () => {
       const error = createCustomError(
         403,
         "Incorrect user or password",
-        Error.name
+        "Error logging user in"
       );
       await loginUser(req as Request, res as Response, next as NextFunction);
 
@@ -142,10 +142,9 @@ describe("Given a loginUser function", () => {
 
       const error = createCustomError(
         403,
-        "Incorrect user or password",
-        Error.name
+        "Invalid user or password",
+        "Password doesn't match with user's password"
       );
-      error.message = "Password Invalid";
       await loginUser(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(error);
