@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { validate } from "express-validation";
 import morgan from "morgan";
+import { generalError } from "./middlewares/error";
 import usersRouter from "./routes/usersRoute";
 import userDataSchema from "./schemas/userDataSchema";
 
@@ -17,5 +18,7 @@ app.use(
   validate(userDataSchema, {}, { abortEarly: false }),
   usersRouter
 );
+
+app.use(generalError);
 
 export default app;

@@ -10,7 +10,11 @@ const authentication = (
 ) => {
   const dataAuthentication = req.get("Authorization");
 
-  const error = createCustomError(400, "Authentication error", Error.name);
+  const error = createCustomError(
+    400,
+    "Authentication error",
+    "Authentication error"
+  );
 
   if (!dataAuthentication || !dataAuthentication.startsWith("Bearer ")) {
     next(error);

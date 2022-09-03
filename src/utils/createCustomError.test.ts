@@ -6,13 +6,14 @@ describe("Given a createCustomError function", () => {
     test("Then it should return a new error with code 222, public message and private message", () => {
       const code = 222;
       const publicMessage = "hola";
+      const privateMessage = "adios";
 
-      const fakeError = createCustomError(code, publicMessage, Error.name);
+      const fakeError = createCustomError(code, publicMessage, privateMessage);
 
       const expectedError = new Error() as CustomError;
       expectedError.statusCode = code;
       expectedError.publicMessage = publicMessage;
-      expectedError.privateMessage = Error.name;
+      expectedError.privateMessage = privateMessage;
 
       expect(fakeError).toStrictEqual(expectedError);
     });

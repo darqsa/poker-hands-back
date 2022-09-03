@@ -20,7 +20,11 @@ describe("Given an authentication middleware", () => {
       const res = {} as Partial<Response>;
 
       const next = jest.fn() as NextFunction;
-      const error = createCustomError(400, "Authentication error", Error.name);
+      const error = createCustomError(
+        400,
+        "Authentication error",
+        "Authentication error"
+      );
 
       authentication(
         req as CustomRequest,
@@ -44,7 +48,7 @@ describe("Given an authentication middleware", () => {
         const error = createCustomError(
           400,
           "Authentication error",
-          Error.name
+          "Authentication error"
         );
 
         authentication(
@@ -69,7 +73,7 @@ describe("Given an authentication middleware", () => {
         const error = createCustomError(
           400,
           "Authentication error",
-          Error.name
+          "Authentication error"
         );
 
         authentication(

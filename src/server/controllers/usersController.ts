@@ -20,9 +20,9 @@ export const registerUser = async (
     res.status(201).json(newUser);
   } catch (error) {
     const customError = createCustomError(
-      400,
-      "Error creating user",
-      error.message
+      409,
+      "User already exists",
+      "User already exists"
     );
     next(customError);
   }
@@ -36,21 +36,24 @@ export const loginUser = async (
   const user = req.body as UserData;
   let findUser: UserLoginData[];
 
-  const userError = createCustomError(
-    403,
-    "Incorrect user or password",
-    Error.name
-  );
   const catchedError = createCustomError(
-    403,
-    "Invalid user or password",
-    Error.name
+    400,
+    "Error logging user in",
+    "Error logging user in"
   );
 
   try {
-    findUser = await User.find({ username: user.username.toString() });
+    findUser = await User.find({
+      username: user.username.toString(),
+    });
     if (findUser.length === 0) {
-      next(userError);
+      const customError = createCustomError(
+        403,
+        "Invalid user or password",
+        "Username doesn't exist"
+      );
+
+      next(customError);
       return;
     }
   } catch (error) {
@@ -58,18 +61,17 @@ export const loginUser = async (
     return;
   }
 
-  try {
-    const isPassWordvalid = await compareHash(
-      user.password,
-      findUser[0].password
+  const isPassWordvalid = await compareHash(
+    user.password,
+    findUser[0].password
+  );
+  if (!isPassWordvalid) {
+    const customError = createCustomError(
+      403,
+      "Invalid user or password",
+      "Password doesn't match with user's password"
     );
-    if (!isPassWordvalid) {
-      userError.message = "Password Invalid";
-      next(userError);
-      return;
-    }
-  } catch (error) {
-    next(catchedError);
+    next(customError);
     return;
   }
 
