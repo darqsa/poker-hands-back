@@ -61,22 +61,17 @@ export const loginUser = async (
     return;
   }
 
-  try {
-    const isPassWordvalid = await compareHash(
-      user.password,
-      findUser[0].password
+  const isPassWordvalid = await compareHash(
+    user.password,
+    findUser[0].password
+  );
+  if (!isPassWordvalid) {
+    const customError = createCustomError(
+      403,
+      "Invalid user or password",
+      "Password doesn't match with user's password"
     );
-    if (!isPassWordvalid) {
-      const customError = createCustomError(
-        403,
-        "Invalid user or password",
-        "Password doesn't match with user's password"
-      );
-      next(customError);
-      return;
-    }
-  } catch (error) {
-    next(catchedError);
+    next(customError);
     return;
   }
 
