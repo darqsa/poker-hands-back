@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
 
 const loadHands = async (req: Request, res: Response, next: NextFunction) => {
