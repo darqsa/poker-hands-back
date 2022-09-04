@@ -23,5 +23,3 @@ export interface UserPayload {
 export interface CustomRequest extends Request {
   payload: UserPayload;
 }
-
-export interface HandData {}
