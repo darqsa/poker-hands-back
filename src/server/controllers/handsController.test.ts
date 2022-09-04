@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
+import createCustomError from "../../utils/createCustomError";
 import loadHands from "./handsController";
 
 describe("Given a loadHands function", () => {
@@ -30,6 +31,17 @@ describe("Given a loadHands function", () => {
 
         expect(res.json).toHaveBeenCalledWith({ hands });
       });
+    });
+  });
+
+  describe("When it receives a response and a there is a new Error", () => {
+    test("Then it should call the next function with the error", async () => {
+      const customError = createCustomError(400, "", "");
+      Hand.find = jest.fn().mockRejectedValue(customError);
+
+      await loadHands(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(customError);
     });
   });
 });
