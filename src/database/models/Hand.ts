@@ -65,7 +65,7 @@ const handSchema = new Schema({
     },
     turn: {
       board: {
-        type: [String],
+        type: String,
       },
       pot: {
         type: Number,
@@ -76,7 +76,7 @@ const handSchema = new Schema({
     },
     river: {
       board: {
-        type: [String],
+        type: String,
       },
       pot: {
         type: Number,

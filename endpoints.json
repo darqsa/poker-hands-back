@@ -13,7 +13,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\":\"holas\",\r\n    \"password\":\"holas\"\r\n}",
+          "raw": "{\r\n    \"username\":\"test0\",\r\n    \"password\":\"test0\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -31,6 +31,9 @@
     {
       "name": "login",
       "request": {
+        "auth": {
+          "type": "bearer"
+        },
         "method": "POST",
         "header": [],
         "body": {
@@ -46,6 +49,18 @@
           "raw": "{{url}}users/login",
           "host": ["{{url}}users"],
           "path": ["login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "loadHands",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}hands",
+          "host": ["{{url}}hands"]
         }
       },
       "response": []
