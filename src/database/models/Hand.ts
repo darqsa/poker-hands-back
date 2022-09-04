@@ -6,7 +6,6 @@ const handSchema = new Schema({
     type: String,
   },
   preGame: {
-    required: true,
     hero: {
       position: {
         required: true,
@@ -22,7 +21,6 @@ const handSchema = new Schema({
       },
     },
     villains: {
-      required: true,
       type: [
         {
           position: {
@@ -44,9 +42,7 @@ const handSchema = new Schema({
     },
   },
   game: {
-    required: true,
     preFlop: {
-      required: true,
       pot: {
         required: true,
         type: Number,
@@ -58,49 +54,39 @@ const handSchema = new Schema({
     },
     flop: {
       board: {
-        required: true,
         type: [String],
       },
       pot: {
-        required: true,
         type: Number,
       },
       actions: {
-        required: true,
         type: [String],
       },
     },
     turn: {
       board: {
-        required: true,
         type: [String],
       },
       pot: {
-        required: true,
         type: Number,
       },
       actions: {
-        required: true,
         type: [String],
       },
     },
     river: {
       board: {
-        required: true,
         type: [String],
       },
       pot: {
-        required: true,
         type: Number,
       },
       actions: {
-        required: true,
         type: [String],
       },
     },
   },
   postGame: {
-    required: true,
     finalPot: {
       required: true,
       type: Number,
