@@ -4,6 +4,7 @@ import { validate } from "express-validation";
 import morgan from "morgan";
 import authentication from "./middlewares/authentication";
 import { generalError } from "./middlewares/error";
+import handsRouter from "./routes/handsRoute";
 import usersRouter from "./routes/usersRoute";
 import userDataSchema from "./schemas/userDataSchema";
 
