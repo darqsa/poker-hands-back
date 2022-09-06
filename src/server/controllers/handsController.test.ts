@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
-import loadHands from "./handsController";
+import { loadHands } from "./handsController";
 
 describe("Given a loadHands function", () => {
   const req: Partial<Request> = {};
