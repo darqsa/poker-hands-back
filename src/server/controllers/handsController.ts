@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
+import { HandData } from "../types/interfaces";
 
-const loadHands = async (req: Request, res: Response, next: NextFunction) => {
+export const loadHands = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const hands = await Hand.find();
 
@@ -16,4 +21,24 @@ const loadHands = async (req: Request, res: Response, next: NextFunction) => {
     next(customError);
   }
 };
-export default loadHands;
+
+export const createHand = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const hand: HandData = req.body;
+
+  try {
+    await Hand.create(hand);
+
+    res.status(201).json("Hand created successfully");
+  } catch (error) {
+    const customError = createCustomError(
+      400,
+      "Error creating new Hand",
+      "Error creating new Hand"
+    );
+    next(customError);
+  }
+};
