@@ -32,7 +32,7 @@ export const createHand = async (
   try {
     await Hand.create(hand);
 
-    res.status(201).json({ hand });
+    res.status(201).json("Hand created successfully");
   } catch (error) {
     const customError = createCustomError(
       400,
