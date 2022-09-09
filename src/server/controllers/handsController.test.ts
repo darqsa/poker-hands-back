@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
 import { HandData } from "../types/interfaces";
-import { createHand, loadHands } from "./handsController";
+import { createHand, deleteHand, loadHands } from "./handsController";
 
 describe("Given a loadHands function", () => {
   const req: Partial<Request> = {};
@@ -105,6 +105,51 @@ describe("Given a createHand function", () => {
       await createHand(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(fakeCustomError);
+    });
+  });
+});
+
+describe("Given a deleteHand function", () => {
+  const req: Partial<Request> = { params: { handId: "1234" } };
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+  const next: Partial<NextFunction> = jest.fn();
+
+  describe("When it receives a valid id", () => {
+    test("Then it should call status function with code 201", async () => {
+      const expectedStatus = 201;
+      Hand.findByIdAndDelete = jest.fn();
+
+      await deleteHand(req as Request, res as Response, next as NextFunction);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+    });
+
+    test("Then it should call the json method with a text", async () => {
+      const text = "Hand deleted successfully";
+      Hand.findByIdAndDelete = jest.fn();
+
+      await deleteHand(req as Request, res as Response, next as NextFunction);
+
+      expect(res.json).toHaveBeenCalledWith(text);
+    });
+  });
+
+  describe("When it receives an invalid id", () => {
+    test("Then it should call the next function with a custom error", async () => {
+      const customError = createCustomError(
+        400,
+        "Error deleting Hand",
+        "Error deleting  Hand"
+      );
+
+      Hand.findByIdAndDelete = jest.fn().mockRejectedValue(customError);
+
+      await deleteHand(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(customError);
     });
   });
 });

@@ -53,7 +53,7 @@ export const deleteHand = async (
   try {
     await Hand.findByIdAndDelete(handId);
 
-    res.status(201).json(`Hand deleted successfully`);
+    res.status(201).json("Hand deleted successfully");
   } catch (error) {
     const customError = createCustomError(
       400,
