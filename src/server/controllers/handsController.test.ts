@@ -2,7 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
 import { HandData } from "../types/interfaces";
-import { createHand, deleteHand, loadHands } from "./handsController";
+import {
+  createHand,
+  deleteHand,
+  loadHandById,
+  loadHands,
+} from "./handsController";
 
 describe("Given a loadHands function", () => {
   const req: Partial<Request> = {};
@@ -148,6 +153,50 @@ describe("Given a deleteHand function", () => {
       Hand.findByIdAndDelete = jest.fn().mockRejectedValue(customError);
 
       await deleteHand(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+});
+
+describe("Given a find hand by id function", () => {
+  const req: Partial<Request> = { params: { handId: "1234" } };
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+  const next: Partial<NextFunction> = jest.fn();
+
+  describe("When it receives a valid id", () => {
+    test("Then it should call status function with code 201", async () => {
+      const expectedStatus = 201;
+      Hand.findById = jest.fn();
+
+      await loadHandById(req as Request, res as Response, next as NextFunction);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+    });
+
+    test("Then it should call the json method with the fakeHand", async () => {
+      Hand.findById = jest.fn();
+
+      await loadHandById(req as Request, res as Response, next as NextFunction);
+
+      expect(res.json).toHaveBeenCalled();
+    });
+  });
+
+  describe("When it receives an invalid id", () => {
+    test("Then it should call the next function with a custom error", async () => {
+      const customError = createCustomError(
+        400,
+        "Couldn't find hand",
+        "Couldn't find hand"
+      );
+
+      Hand.findById = jest.fn().mockRejectedValue(customError);
+
+      await loadHandById(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(customError);
     });

@@ -77,8 +77,8 @@ export const loadHandById = async (
   } catch (error) {
     const customError = createCustomError(
       400,
-      "Error deleting Hand",
-      "Error deleting  Hand"
+      "Couldn't find hand",
+      "Couldn't find hand"
     );
     next(customError);
   }
