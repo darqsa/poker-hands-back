@@ -42,3 +42,24 @@ export const createHand = async (
     next(customError);
   }
 };
+
+export const deleteHand = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { handId } = req.params;
+
+  try {
+    await Hand.findByIdAndDelete(handId);
+
+    res.status(201).json("Hand deleted successfully");
+  } catch (error) {
+    const customError = createCustomError(
+      400,
+      "Error deleting Hand",
+      "Error deleting  Hand"
+    );
+    next(customError);
+  }
+};
