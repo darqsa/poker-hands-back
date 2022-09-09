@@ -1,6 +1,10 @@
 import express from "express";
 import { validate } from "express-validation";
-import { createHand, loadHands } from "../controllers/handsController";
+import {
+  createHand,
+  deleteHand,
+  loadHands,
+} from "../controllers/handsController";
 import handDataSchema from "../schemas/handDataSchema";
 
 const handsRouter = express.Router();
@@ -11,5 +15,6 @@ handsRouter.post(
   validate(handDataSchema, {}, { abortEarly: false }),
   createHand
 );
+handsRouter.delete("/delete/:handId", deleteHand);
 
 export default handsRouter;

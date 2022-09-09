@@ -6,7 +6,7 @@ const handDataSchema = {
     preGame: {
       hero: {
         position: Joi.number().greater(0).less(7).required(),
-        initialStack: Joi.number().greater(0).less(1000).required(),
+        initialStack: Joi.number().greater(0).less(10000).required(),
         hand: Joi.array()
           .length(2)
           .items(
@@ -21,7 +21,7 @@ const handDataSchema = {
         .max(5)
         .has({
           position: Joi.number().greater(0).less(7).required(),
-          initialStack: Joi.number().greater(0).less(1000).required(),
+          initialStack: Joi.number().greater(0).less(10000).required(),
           hand: Joi.array()
             .length(2)
             .items(
