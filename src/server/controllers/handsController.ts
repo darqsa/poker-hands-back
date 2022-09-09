@@ -63,3 +63,23 @@ export const deleteHand = async (
     next(customError);
   }
 };
+
+export const loadHandById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { handId } = req.params;
+  try {
+    const hand = await Hand.findById(handId);
+
+    res.status(201).json(hand);
+  } catch (error) {
+    const customError = createCustomError(
+      400,
+      "Couldn't find hand",
+      "Couldn't find hand"
+    );
+    next(customError);
+  }
+};
