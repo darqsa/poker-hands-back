@@ -31,7 +31,6 @@ export const createHand = async (
   next: NextFunction
 ) => {
   const hand = req.body;
-
   try {
     const newHand = await Hand.create(hand);
 

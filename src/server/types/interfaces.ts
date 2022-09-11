@@ -65,7 +65,7 @@ export interface HandData {
     finalPot: number;
     gameWinner: string;
     handDescription?: string;
-    handImage?: string;
   };
+  handImage?: string;
   owner: string;
 }

@@ -14,9 +14,7 @@ const supaBaseUpload = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {
-    postGame: { handImage },
-  } = req.body;
+  const { handImage } = req.body;
 
   const imagePath = path.join("uploads", handImage);
 
@@ -34,7 +32,7 @@ const supaBaseUpload = async (
 
     const { publicURL } = storage.getPublicUrl(handImage);
 
-    req.body.postGame.handImageBackup = publicURL;
+    req.body.handImageBackup = publicURL;
     next();
   } catch (error) {
     const newError = createCustomError(
