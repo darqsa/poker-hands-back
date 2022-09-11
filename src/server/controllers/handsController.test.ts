@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
-import { CustomRequest, HandData } from "../types/interfaces";
+import { HandData } from "../types/interfaces";
 import {
   createHand,
   deleteHand,
@@ -84,11 +84,7 @@ describe("Given a createHand function", () => {
       const expectedStatus = 201;
 
       Hand.create = jest.fn().mockResolvedValue(fakeHand);
-      await createHand(
-        req as CustomRequest,
-        res as Response,
-        next as NextFunction
-      );
+      await createHand(req as Request, res as Response, next as NextFunction);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
     });
@@ -97,11 +93,7 @@ describe("Given a createHand function", () => {
       Hand.create = jest.fn().mockResolvedValue(fakeHand);
       const text = "Hand created successfully";
 
-      await createHand(
-        req as CustomRequest,
-        res as Response,
-        next as NextFunction
-      );
+      await createHand(req as Request, res as Response, next as NextFunction);
 
       expect(res.json).toHaveBeenCalledWith(text);
     });
@@ -115,11 +107,7 @@ describe("Given a createHand function", () => {
         "Error creating new hand"
       );
       Hand.create = jest.fn().mockRejectedValue(fakeCustomError);
-      await createHand(
-        req as CustomRequest,
-        res as Response,
-        next as NextFunction
-      );
+      await createHand(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(fakeCustomError);
     });

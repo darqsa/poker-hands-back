@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import User from "../../database/models/User";
 import createCustomError from "../../utils/createCustomError";
-import { CustomRequest } from "../types/interfaces";
 
 export const loadHands = async (
   req: Request,
@@ -24,7 +23,7 @@ export const loadHands = async (
 };
 
 export const createHand = async (
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -34,7 +33,7 @@ export const createHand = async (
     const newHand = await Hand.create(hand);
 
     const user = await User.findById(hand.owner);
-    await User.findByIdAndUpdate(hand.owner, {
+    await user.update({
       hands: [...user.hands, newHand.id],
     });
 
@@ -57,7 +56,14 @@ export const deleteHand = async (
   const { handId } = req.params;
 
   try {
-    await Hand.findByIdAndDelete(handId);
+    const hand = await Hand.findByIdAndDelete(handId);
+
+    const user = await User.findById(hand.owner);
+    const newUserHands = user.hands.filter((userHand) => userHand !== handId);
+
+    await user.update({
+      hands: newUserHands,
+    });
 
     res.status(201).json("Hand deleted successfully");
   } catch (error) {
