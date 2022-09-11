@@ -67,4 +67,5 @@ export interface HandData {
     handDescription?: string;
     handImage?: string;
   };
+  owner: string;
 }

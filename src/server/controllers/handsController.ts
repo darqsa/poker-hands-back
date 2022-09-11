@@ -36,7 +36,7 @@ export const createHand = async (
     const newHand = await Hand.create(hand);
 
     const user = await User.findById(hand.owner);
-    await user.update({
+    await User.findByIdAndUpdate(hand.owner, {
       hands: [...user.hands, newHand.id],
     });
 
@@ -60,11 +60,10 @@ export const deleteHand = async (
 
   try {
     const hand = await Hand.findByIdAndDelete(handId);
-
     const user = await User.findById(hand.owner);
     const newUserHands = user.hands.filter((userHand) => userHand !== handId);
 
-    await user.update({
+    await User.findByIdAndUpdate(hand.owner, {
       hands: newUserHands,
     });
 
