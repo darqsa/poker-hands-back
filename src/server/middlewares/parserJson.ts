@@ -10,7 +10,6 @@ const parserJson = async (req: Request, res: Response, next: NextFunction) => {
     const hand = await JSON.parse(newhand);
 
     const newName = `${Date.now()}${req.file.originalname}`;
-    hand.postGame.handImage = newName;
 
     await fs.rename(
       path.join("uploads", req.file.filename),
