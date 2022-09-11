@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
+import User from "../../database/models/User";
 import createCustomError from "../../utils/createCustomError";
-import { HandData } from "../types/interfaces";
+import { CustomRequest } from "../types/interfaces";
 
 export const loadHands = async (
   req: Request,
@@ -23,14 +24,19 @@ export const loadHands = async (
 };
 
 export const createHand = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const hand: HandData = req.body;
+  const hand = req.body;
 
   try {
-    await Hand.create(hand);
+    const newHand = await Hand.create(hand);
+
+    const user = await User.findById(hand.owner);
+    await User.findByIdAndUpdate(hand.owner, {
+      hands: [...user.hands, newHand.id],
+    });
 
     res.status(201).json("Hand created successfully");
   } catch (error) {

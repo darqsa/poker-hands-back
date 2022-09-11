@@ -64,6 +64,7 @@ const handDataSchema = {
       handDescription: Joi.string(),
       handImage: Joi.string(),
     },
+    owner: Joi.string().length(24),
   }),
 };
 export default handDataSchema;

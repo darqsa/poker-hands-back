@@ -10,6 +10,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  hands: [String],
 });
 
 const User = model("User", userSchema, "users");

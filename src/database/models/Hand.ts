@@ -102,6 +102,10 @@ const handSchema = new Schema({
       type: String,
     },
   },
+  owner: {
+    type: String,
+    required: true,
+  },
 });
 
 const Hand = model("Hand", handSchema, "hands");
