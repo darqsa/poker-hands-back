@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import createCustomError from "../../utils/createCustomError";
-import { HandData } from "../types/interfaces";
+import { CustomRequest, HandData } from "../types/interfaces";
 import {
   createHand,
   deleteHand,
@@ -22,7 +22,11 @@ describe("Given a loadHands function", () => {
       const expectedStatus = 200;
       Hand.find = jest.fn().mockResolvedValue([]);
 
-      await loadHands(req as Request, res as Response, next as NextFunction);
+      await loadHands(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
     });
@@ -33,7 +37,11 @@ describe("Given a loadHands function", () => {
 
         Hand.find = jest.fn().mockResolvedValue(hands);
 
-        await loadHands(req as Request, res as Response, next as NextFunction);
+        await loadHands(
+          req as CustomRequest,
+          res as Response,
+          next as NextFunction
+        );
 
         expect(res.json).toHaveBeenCalledWith({ hands });
       });
@@ -45,7 +53,11 @@ describe("Given a loadHands function", () => {
       const customError = createCustomError(400, "", "");
       Hand.find = jest.fn().mockRejectedValue(customError);
 
-      await loadHands(req as Request, res as Response, next as NextFunction);
+      await loadHands(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(next).toHaveBeenCalledWith(customError);
     });

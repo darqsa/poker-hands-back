@@ -2,16 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
 import User from "../../database/models/User";
 import createCustomError from "../../utils/createCustomError";
+import { CustomRequest } from "../types/interfaces";
 
 export const loadHands = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
+  const userId = req.payload.id;
   try {
-    const hands = await Hand.find();
+    const user = await User.findById(userId);
+    const userHands = await Hand.find({ _id: { $in: user.hands } });
 
-    res.status(200).json({ hands });
+    res.status(200).json({ userHands });
   } catch (error) {
     const customError = createCustomError(
       400,
