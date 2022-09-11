@@ -23,7 +23,7 @@ const supaBaseUpload = async (
   try {
     const fileData = await readFile(imagePath);
 
-    const storage = supabase.storage.from("gamehouse");
+    const storage = supabase.storage.from("poker-hands");
 
     const uploadResult = await storage.upload(handImage, fileData);
 
