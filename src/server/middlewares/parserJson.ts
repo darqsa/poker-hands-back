@@ -5,21 +5,21 @@ import createCustomError from "../../utils/createCustomError";
 
 const parserJson = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newGame = req.body.game;
+    const newhand = req.body;
 
-    const game = await JSON.parse(newGame);
+    const hand = await JSON.parse(newhand);
 
     const newName = `${Date.now()}${req.file.originalname}`;
-    game.image = newName;
+    hand.postGame.handImage = newName;
 
     await fs.rename(
       path.join("uploads", req.file.filename),
       path.join("uploads", newName)
     );
 
-    game.image = newName;
+    hand.postGame.handImage = newName;
 
-    req.body = game;
+    req.body = hand;
 
     next();
   } catch (error) {

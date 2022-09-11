@@ -8,16 +8,18 @@ import {
   loadHands,
 } from "../controllers/handsController";
 import handDataSchema from "../schemas/handDataSchema";
+import supaBaseUpload from "../middlewares/supabase";
 
-const upload = multer({ dest: "uploads", limits: { fileSize: 3000000 } });
+const upload = multer({ dest: "uploads" });
 const handsRouter = express.Router();
 
 handsRouter.get("/", loadHands);
 handsRouter.get("/:handId", loadHandById);
 handsRouter.post(
   "/create",
-  upload.single("image"),
   validate(handDataSchema, {}, { abortEarly: false }),
+  upload.single("image"),
+  supaBaseUpload,
   createHand
 );
 handsRouter.delete("/delete/:handId", deleteHand);
