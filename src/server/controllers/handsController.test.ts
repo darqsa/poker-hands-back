@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
+import User from "../../database/models/User";
 import createCustomError from "../../utils/createCustomError";
-import { HandData } from "../types/interfaces";
+import { CustomRequest } from "../types/interfaces";
 import {
   createHand,
   deleteHand,
@@ -9,8 +10,16 @@ import {
   loadHands,
 } from "./handsController";
 
+const fakeUser = {
+  username: "FakeUser",
+  id: "1234",
+  hands: ["12345"],
+};
+
 describe("Given a loadHands function", () => {
-  const req: Partial<Request> = {};
+  const req: Partial<CustomRequest> = {
+    payload: { id: "1234", username: "test" },
+  };
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
@@ -21,21 +30,30 @@ describe("Given a loadHands function", () => {
     test("Then it should call status function with code 200", async () => {
       const expectedStatus = 200;
       Hand.find = jest.fn().mockResolvedValue([]);
-
-      await loadHands(req as Request, res as Response, next as NextFunction);
+      User.findById = jest.fn().mockResolvedValue(fakeUser);
+      await loadHands(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
     });
 
     describe("And Hands.find() returns a list with Hola and Adios", () => {
       test("Then it should call the json method with the list with Hola and Adios", async () => {
-        const hands = ["Hola", "Adios"];
+        const userHands = ["Hola", "Adios"];
 
-        Hand.find = jest.fn().mockResolvedValue(hands);
+        Hand.find = jest.fn().mockResolvedValue(userHands);
+        User.findById = jest.fn().mockResolvedValue(fakeUser);
 
-        await loadHands(req as Request, res as Response, next as NextFunction);
+        await loadHands(
+          req as CustomRequest,
+          res as Response,
+          next as NextFunction
+        );
 
-        expect(res.json).toHaveBeenCalledWith({ hands });
+        expect(res.json).toHaveBeenCalledWith({ userHands });
       });
     });
   });
@@ -44,8 +62,13 @@ describe("Given a loadHands function", () => {
     test("Then it should call the next function with the error", async () => {
       const customError = createCustomError(400, "", "");
       Hand.find = jest.fn().mockRejectedValue(customError);
+      User.findById = jest.fn().mockResolvedValue(fakeUser);
 
-      await loadHands(req as Request, res as Response, next as NextFunction);
+      await loadHands(
+        req as CustomRequest,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(next).toHaveBeenCalledWith(customError);
     });
@@ -53,7 +76,7 @@ describe("Given a loadHands function", () => {
 });
 
 describe("Given a createHand function", () => {
-  const fakeHand: HandData = {
+  const fakeHand = {
     handName: "Best hand name ever",
     preGame: {
       hero: { hand: ["Ac", "Ad"], initialStack: 100, position: 0 },
@@ -70,20 +93,25 @@ describe("Given a createHand function", () => {
       river: { board: "6d", actions: ["Everyone is allin"], pot: 200 },
     },
     postGame: { finalPot: 200, gameWinner: "Hero" },
+    id: "12345",
+    owner: "1234",
   };
 
-  const req: Partial<Request> = {};
+  const req: Partial<Request> = { body: fakeHand };
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   };
   const next: Partial<NextFunction> = jest.fn();
 
+  Hand.create = jest.fn().mockReturnValue(fakeHand);
+  User.findById = jest
+    .fn()
+    .mockReturnValue({ id: fakeUser.id, hands: fakeUser.hands });
+  User.findByIdAndUpdate = jest.fn();
   describe("When it receives a response and a fake hand", () => {
     test("Then it should call status function with code 201", async () => {
       const expectedStatus = 201;
-
-      Hand.create = jest.fn().mockResolvedValue(fakeHand);
       await createHand(req as Request, res as Response, next as NextFunction);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
@@ -125,8 +153,9 @@ describe("Given a deleteHand function", () => {
   describe("When it receives a valid id", () => {
     test("Then it should call status function with code 201", async () => {
       const expectedStatus = 201;
-      Hand.findByIdAndDelete = jest.fn();
-
+      Hand.findByIdAndDelete = jest.fn().mockReturnValue(fakeUser.hands[0]);
+      User.findById = jest.fn().mockReturnValue(fakeUser);
+      User.findByIdAndUpdate = jest.fn();
       await deleteHand(req as Request, res as Response, next as NextFunction);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);

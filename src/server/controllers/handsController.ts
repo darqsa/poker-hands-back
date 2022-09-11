@@ -1,17 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import Hand from "../../database/models/Hand";
+import User from "../../database/models/User";
 import createCustomError from "../../utils/createCustomError";
-import { HandData } from "../types/interfaces";
+import { CustomRequest } from "../types/interfaces";
 
 export const loadHands = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
+  const userId = req.payload.id;
   try {
-    const hands = await Hand.find();
+    const user = await User.findById(userId);
+    const userHands = await Hand.find({ _id: { $in: user.hands } });
 
-    res.status(200).json({ hands });
+    res.status(200).json({ userHands });
   } catch (error) {
     const customError = createCustomError(
       400,
@@ -27,10 +30,15 @@ export const createHand = async (
   res: Response,
   next: NextFunction
 ) => {
-  const hand: HandData = req.body;
+  const hand = req.body;
 
   try {
-    await Hand.create(hand);
+    const newHand = await Hand.create(hand);
+
+    const user = await User.findById(hand.owner);
+    await User.findByIdAndUpdate(hand.owner, {
+      hands: [...user.hands, newHand.id],
+    });
 
     res.status(201).json("Hand created successfully");
   } catch (error) {
@@ -51,7 +59,13 @@ export const deleteHand = async (
   const { handId } = req.params;
 
   try {
-    await Hand.findByIdAndDelete(handId);
+    const hand = await Hand.findByIdAndDelete(handId);
+    const user = await User.findById(hand.owner);
+    const newUserHands = user.hands.filter((userHand) => userHand !== handId);
+
+    await User.findByIdAndUpdate(hand.owner, {
+      hands: newUserHands,
+    });
 
     res.status(201).json("Hand deleted successfully");
   } catch (error) {
