@@ -101,6 +101,9 @@ const handSchema = new Schema({
     handImage: {
       type: String,
     },
+    handImageBackup: {
+      type: String,
+    },
   },
   owner: {
     type: String,
