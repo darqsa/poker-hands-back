@@ -14,33 +14,36 @@ const supaBaseUpload = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { handImage } = req.body;
+  if (req.body.handImage) {
+    const { handImage } = req.body;
+    const imagePath = path.join("uploads", handImage);
 
-  const imagePath = path.join("uploads", handImage);
+    try {
+      const fileData = await readFile(imagePath);
 
-  try {
-    const fileData = await readFile(imagePath);
+      const storage = supabase.storage.from("poker-hands");
 
-    const storage = supabase.storage.from("poker-hands");
+      const uploadResult = await storage.upload(handImage, fileData);
 
-    const uploadResult = await storage.upload(handImage, fileData);
+      if (uploadResult.error) {
+        next(uploadResult.error);
+        return;
+      }
 
-    if (uploadResult.error) {
-      next(uploadResult.error);
-      return;
+      const { publicURL } = storage.getPublicUrl(handImage);
+
+      req.body.handImageBackup = publicURL;
+      next();
+    } catch (error) {
+      const newError = createCustomError(
+        500,
+        "Can't upload the image",
+        "Can't upload the image"
+      );
+      next(newError);
     }
-
-    const { publicURL } = storage.getPublicUrl(handImage);
-
-    req.body.handImageBackup = publicURL;
+  } else {
     next();
-  } catch (error) {
-    const newError = createCustomError(
-      500,
-      "Can't upload the image",
-      "Can't upload the image"
-    );
-    next(newError);
   }
 };
 

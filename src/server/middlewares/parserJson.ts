@@ -5,24 +5,25 @@ import createCustomError from "../../utils/createCustomError";
 
 const parserJson = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newhand = req.body;
+    const { userHand } = req.body;
+    const hand = await JSON.parse(userHand);
 
-    const hand = await JSON.parse(newhand);
+    if (req.file) {
+      const newName = `${Date.now()}${req.file.originalname}`;
 
-    const newName = `${Date.now()}${req.file.originalname}`;
+      await fs.rename(
+        path.join("uploads", req.file.filename),
+        path.join("uploads", newName)
+      );
 
-    await fs.rename(
-      path.join("uploads", req.file.filename),
-      path.join("uploads", newName)
-    );
-
-    hand.postGame.handImage = newName;
+      hand.handImage = newName;
+    }
 
     req.body = hand;
 
     next();
   } catch (error) {
-    const errorData = createCustomError(404, "Missing data", "Missing data");
+    const errorData = createCustomError(400, "Missing data", "Missing data");
     next(errorData);
   }
 };
