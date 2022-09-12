@@ -7,6 +7,7 @@ import { CustomRequest } from "../types/interfaces";
 import {
   createHand,
   deleteHand,
+  editHand,
   loadHandById,
   loadHands,
 } from "./handsController";
@@ -116,6 +117,50 @@ describe("Given a createHand function", () => {
       );
       Hand.create = jest.fn().mockRejectedValue(fakeCustomError);
       await createHand(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(fakeCustomError);
+    });
+  });
+});
+
+describe("Given a editHand function", () => {
+  const newFakeHand = { ...fakeHand, handName: "New Hand Name" };
+  const req: Partial<Request> = {
+    body: newFakeHand,
+  };
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+  const next: Partial<NextFunction> = jest.fn();
+
+  Hand.findByIdAndUpdate = jest.fn().mockReturnValue(newFakeHand);
+  describe("When it receives a response and a new fake hand", () => {
+    test("Then it should call status function with code 201", async () => {
+      const expectedStatus = 201;
+      await editHand(req as Request, res as Response, next as NextFunction);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+    });
+
+    test("Then it should call the response method with the text", async () => {
+      const text = "Hand edited successfully";
+
+      await editHand(req as Request, res as Response, next as NextFunction);
+
+      expect(res.json).toHaveBeenCalledWith(text);
+    });
+  });
+
+  describe("When it receives a response and a wrong new fakeHand", () => {
+    test("Then it should call next function with the fakeCustomError", async () => {
+      const fakeCustomError = createCustomError(
+        400,
+        "Error editing new hand",
+        "Error editing new hand"
+      );
+      Hand.findByIdAndUpdate = jest.fn().mockRejectedValue(fakeCustomError);
+      await editHand(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(fakeCustomError);
     });
