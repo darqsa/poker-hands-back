@@ -58,7 +58,7 @@ export const editHand = async (
   const hand = req.body;
   const { handId } = req.params;
   try {
-    await Hand.findByIdAndUpdate(handId, { hand });
+    await Hand.replaceOne({ _id: handId }, hand);
 
     res.status(201).json("Hand edited successfully");
   } catch (error) {
