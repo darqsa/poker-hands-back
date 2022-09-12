@@ -11,15 +11,17 @@ import {
 import handDataSchema from "../schemas/handDataSchema";
 import supaBaseUpload from "../middlewares/supabase";
 import parserJson from "../middlewares/parserJson";
+import authentication from "../middlewares/authentication";
 
 const upload = multer({ dest: "uploads", limits: { fileSize: 1000000 } });
 const handsRouter = express.Router();
 
-handsRouter.get("/", loadHands);
+handsRouter.get("/", authentication, loadHands);
 handsRouter.get("/:handId", loadHandById);
 handsRouter.post(
   "/create",
   upload.single("handImage"),
+  authentication,
   parserJson,
   validate(handDataSchema, {}, { abortEarly: false }),
   supaBaseUpload,
@@ -28,11 +30,12 @@ handsRouter.post(
 handsRouter.put(
   "/edit/:handId",
   upload.single("handImage"),
+  authentication,
   parserJson,
   validate(handDataSchema, {}, { abortEarly: false }),
   supaBaseUpload,
   editHand
 );
-handsRouter.delete("/delete/:handId", deleteHand);
+handsRouter.delete("/delete/:handId", authentication, deleteHand);
 
 export default handsRouter;

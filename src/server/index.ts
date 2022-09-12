@@ -2,7 +2,6 @@ import cors from "cors";
 import express from "express";
 import { validate } from "express-validation";
 import morgan from "morgan";
-import authentication from "./middlewares/authentication";
 import { generalError } from "./middlewares/error";
 import handsRouter from "./routes/handsRoute";
 import usersRouter from "./routes/usersRoute";
@@ -20,7 +19,7 @@ app.use(
   validate(userDataSchema, {}, { abortEarly: false }),
   usersRouter
 );
-app.use("/hands", authentication, handsRouter);
+app.use("/hands", handsRouter);
 
 app.use(generalError);
 
