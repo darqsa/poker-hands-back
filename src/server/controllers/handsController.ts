@@ -50,6 +50,27 @@ export const createHand = async (
   }
 };
 
+export const editHand = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const hand = req.body;
+  const { handId } = req.params;
+  try {
+    await Hand.findByIdAndUpdate(handId, { hand });
+
+    res.status(201).json("Hand edited successfully");
+  } catch (error) {
+    const customError = createCustomError(
+      400,
+      "Error editing Hand",
+      "Error editing Hand"
+    );
+    next(customError);
+  }
+};
+
 export const deleteHand = async (
   req: Request,
   res: Response,
