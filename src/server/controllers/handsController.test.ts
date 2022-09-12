@@ -127,6 +127,7 @@ describe("Given a editHand function", () => {
   const newFakeHand = { ...fakeHand, handName: "New Hand Name" };
   const req: Partial<Request> = {
     body: newFakeHand,
+    params: { handId: "1234" },
   };
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
