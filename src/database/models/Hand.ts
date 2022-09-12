@@ -98,12 +98,12 @@ const handSchema = new Schema({
     handDescription: {
       type: String,
     },
-    handImage: {
-      type: String,
-    },
-    handImageBackup: {
-      type: String,
-    },
+  },
+  handImage: {
+    type: String,
+  },
+  handImageBackup: {
+    type: String,
   },
   owner: {
     type: String,

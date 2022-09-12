@@ -62,8 +62,9 @@ const handDataSchema = {
       finalPot: Joi.number().greater(0).required(),
       gameWinner: Joi.string().required(),
       handDescription: Joi.string(),
-      handImage: Joi.string(),
     },
+    handImage: Joi.string(),
+    handImageBackup: Joi.string(),
     owner: Joi.string().length(24),
   }),
 };
