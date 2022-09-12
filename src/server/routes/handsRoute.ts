@@ -11,7 +11,7 @@ import handDataSchema from "../schemas/handDataSchema";
 import supaBaseUpload from "../middlewares/supabase";
 import parserJson from "../middlewares/parserJson";
 
-const upload = multer({ dest: "uploads", limits: { fileSize: 10000000 } });
+const upload = multer({ dest: "uploads", limits: { fileSize: 1000000 } });
 const handsRouter = express.Router();
 
 handsRouter.get("/", loadHands);
