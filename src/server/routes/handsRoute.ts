@@ -4,6 +4,7 @@ import { validate } from "express-validation";
 import {
   createHand,
   deleteHand,
+  editHand,
   loadHandById,
   loadHands,
 } from "../controllers/handsController";
@@ -23,6 +24,14 @@ handsRouter.post(
   validate(handDataSchema, {}, { abortEarly: false }),
   supaBaseUpload,
   createHand
+);
+handsRouter.put(
+  "/edit/:handId",
+  upload.single("handImage"),
+  parserJson,
+  validate(handDataSchema, {}, { abortEarly: false }),
+  supaBaseUpload,
+  editHand
 );
 handsRouter.delete("/delete/:handId", deleteHand);
 
