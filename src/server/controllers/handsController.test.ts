@@ -135,7 +135,7 @@ describe("Given a editHand function", () => {
   };
   const next: Partial<NextFunction> = jest.fn();
 
-  Hand.findByIdAndUpdate = jest.fn().mockReturnValue(newFakeHand);
+  Hand.replaceOne = jest.fn().mockReturnValue(newFakeHand);
   describe("When it receives a response and a new fake hand", () => {
     test("Then it should call status function with code 201", async () => {
       const expectedStatus = 201;
@@ -160,7 +160,7 @@ describe("Given a editHand function", () => {
         "Error editing new hand",
         "Error editing new hand"
       );
-      Hand.findByIdAndUpdate = jest.fn().mockRejectedValue(fakeCustomError);
+      Hand.replaceOne = jest.fn().mockRejectedValue(fakeCustomError);
       await editHand(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(fakeCustomError);
