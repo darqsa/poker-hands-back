@@ -8,6 +8,7 @@ import {
   createHand,
   deleteHand,
   editHand,
+  loadByHandName,
   loadHandById,
   loadHands,
 } from "./handsController";
@@ -252,6 +253,62 @@ describe("Given a find hand by id function", () => {
       Hand.findById = jest.fn().mockRejectedValue(customError);
 
       await loadHandById(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+});
+
+describe("Given a find hand by handname function", () => {
+  const req: Partial<Request> = { params: { handName: "Best Hand" } };
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+  const next: Partial<NextFunction> = jest.fn();
+
+  describe("When it receives a valid handName", () => {
+    test("Then it should call status function with code 201", async () => {
+      const expectedStatus = 201;
+      Hand.find = jest.fn();
+
+      await loadByHandName(
+        req as Request,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+    });
+
+    test("Then it should call the json method with the fakeHand", async () => {
+      Hand.find = jest.fn();
+
+      await loadByHandName(
+        req as Request,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(res.json).toHaveBeenCalled();
+    });
+  });
+
+  describe("When it receives an invalid id", () => {
+    test("Then it should call the next function with a custom error", async () => {
+      const customError = createCustomError(
+        400,
+        "Couldn't find hand",
+        "Couldn't find hand"
+      );
+
+      Hand.find = jest.fn().mockRejectedValue(customError);
+
+      await loadByHandName(
+        req as Request,
+        res as Response,
+        next as NextFunction
+      );
 
       expect(next).toHaveBeenCalledWith(customError);
     });

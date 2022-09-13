@@ -117,3 +117,23 @@ export const loadHandById = async (
     next(customError);
   }
 };
+
+export const loadByHandName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { handName } = req.params;
+  try {
+    const hand = await Hand.find({ handName });
+
+    res.status(201).json(hand);
+  } catch (error) {
+    const customError = createCustomError(
+      400,
+      "Couldn't find hand",
+      "Couldn't find hand"
+    );
+    next(customError);
+  }
+};
