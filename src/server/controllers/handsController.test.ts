@@ -260,7 +260,7 @@ describe("Given a find hand by id function", () => {
 });
 
 describe("Given a find hand by handname function", () => {
-  const req: Partial<Request> = { params: { handName: "Best Hand" } };
+  const req: Partial<Request> = { params: { name: "BestHand" } };
   const res: Partial<Response> = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
@@ -270,7 +270,7 @@ describe("Given a find hand by handname function", () => {
   describe("When it receives a valid handName", () => {
     test("Then it should call status function with code 201", async () => {
       const expectedStatus = 201;
-      Hand.find = jest.fn();
+      Hand.find = jest.fn().mockReturnValue([{ fakeHand }]);
 
       await loadByHandName(
         req as Request,
@@ -282,7 +282,7 @@ describe("Given a find hand by handname function", () => {
     });
 
     test("Then it should call the json method with the fakeHand", async () => {
-      Hand.find = jest.fn();
+      Hand.find = jest.fn().mockReturnValue([{ fakeHand }]);
 
       await loadByHandName(
         req as Request,
@@ -295,6 +295,26 @@ describe("Given a find hand by handname function", () => {
   });
 
   describe("When it receives an invalid id", () => {
+    test("Then it should call the next function with a custom error", async () => {
+      const customError = createCustomError(
+        400,
+        "Couldn't find hand",
+        "Couldn't find hand"
+      );
+
+      Hand.find = jest.fn().mockReturnValue([]);
+
+      await loadByHandName(
+        req as Request,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+
+  describe("When there's an error finding hands", () => {
     test("Then it should call the next function with a custom error", async () => {
       const customError = createCustomError(
         400,

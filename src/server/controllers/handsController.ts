@@ -123,11 +123,20 @@ export const loadByHandName = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { handName } = req.params;
+  const { name } = req.params;
   try {
-    const hand = await Hand.find({ handName });
+    const hands = await Hand.find({ handName: name });
 
-    res.status(201).json(hand);
+    if (hands.length === 0) {
+      const customError = createCustomError(
+        400,
+        "Couldn't find hand",
+        "Couldn't find hand"
+      );
+      next(customError);
+      return;
+    }
+    res.status(201).json(hands);
   } catch (error) {
     const customError = createCustomError(
       400,

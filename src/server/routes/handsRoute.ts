@@ -18,7 +18,7 @@ const upload = multer({ dest: "uploads", limits: { fileSize: 1000000 } });
 const handsRouter = express.Router();
 
 handsRouter.get("/", authentication, loadHands);
-handsRouter.get("/:hand", authentication, loadByHandName);
+handsRouter.get("/filter/:name", authentication, loadByHandName);
 handsRouter.get("/:handId", loadHandById);
 handsRouter.post(
   "/create",
