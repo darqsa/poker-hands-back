@@ -294,26 +294,6 @@ describe("Given a find hand by handname function", () => {
     });
   });
 
-  describe("When it receives an invalid id", () => {
-    test("Then it should call the next function with a custom error", async () => {
-      const customError = createCustomError(
-        400,
-        "Couldn't find hand",
-        "Couldn't find hand"
-      );
-
-      Hand.find = jest.fn().mockReturnValue([]);
-
-      await loadByHandName(
-        req as Request,
-        res as Response,
-        next as NextFunction
-      );
-
-      expect(next).toHaveBeenCalledWith(customError);
-    });
-  });
-
   describe("When there's an error finding hands", () => {
     test("Then it should call the next function with a custom error", async () => {
       const customError = createCustomError(

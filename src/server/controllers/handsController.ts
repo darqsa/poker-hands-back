@@ -127,15 +127,6 @@ export const loadByHandName = async (
   try {
     const hands = await Hand.find({ handName: name });
 
-    if (hands.length === 0) {
-      const customError = createCustomError(
-        400,
-        "Couldn't find hand",
-        "Couldn't find hand"
-      );
-      next(customError);
-      return;
-    }
     res.status(201).json(hands);
   } catch (error) {
     const customError = createCustomError(
