@@ -20,6 +20,32 @@ jest.mock("@supabase/supabase-js", () => ({
 }));
 
 describe("Given a supabaseUpload function", () => {
+  const res = {} as Partial<Response>;
+  const next = jest.fn() as NextFunction;
+
+  describe("When called without an image", () => {
+    test("Then it should call the next function", async () => {
+      const req = {
+        body: {
+          handImage: "",
+        },
+      } as Partial<Request>;
+
+      await supaBaseUpload(
+        req as Request,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  const req = {
+    body: {
+      handImage: "image.png",
+    },
+  } as Partial<Request>;
   beforeAll(async () => {
     await fs.writeFile("uploads/image.png", "content");
   });
@@ -28,16 +54,8 @@ describe("Given a supabaseUpload function", () => {
     await fs.unlink("uploads/image.png");
   });
 
-  const req = {
-    body: {
-      handImage: "image.png",
-    },
-  } as Partial<Request>;
-  const res = {} as Partial<Response>;
-  const next = jest.fn() as NextFunction;
-
   describe("When called with a request, a response and a next function as arguments", () => {
-    test("Then it should call next", async () => {
+    test("Then it should call next function", async () => {
       await supaBaseUpload(
         req as Request,
         res as Response,
